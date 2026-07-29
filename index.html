@@ -823,10 +823,14 @@
 
     .recent-trail-scroll {
       display:flex;
-      flex-wrap:wrap;
+      flex-wrap:nowrap;
       gap:6px;
-      overflow:visible;
-      padding:5px 4px 7px;
+      overflow-x:auto;
+      overflow-y:hidden;
+      padding:5px 4px 9px;
+      scrollbar-width:thin;
+      scroll-behavior:smooth;
+      -webkit-overflow-scrolling:touch;
     }
 
     .recent-trail-item {
@@ -890,6 +894,10 @@
       border-color:rgba(255,255,255,.14);
       background:rgba(255,255,255,.08);
       color:#dbeafe;
+    }
+
+    #qText {
+      font-weight:900;
     }
 
     .self-grade #showAnswer {
@@ -1281,6 +1289,7 @@
       background:rgba(255,255,255,.76);
       border-color:var(--line);
       color:var(--ink);
+      font-weight:400;
     }
 
     .mc-option.selected {
@@ -11882,7 +11891,6 @@ document.addEventListener("DOMContentLoaded", function() {
       answeredAt: Date.now()
     });
 
-    recentQuestionTrail = recentQuestionTrail.slice(-15);
     if (recentTrailEnabled() && !recentTrailHintDismissed && recentQuestionTrail.length === 1) {
       recentTrailHintVisible = true;
       recentTrailHintQuestionId = question.id;
@@ -11902,7 +11910,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     var items = recentQuestionTrail.filter(function(item) {
       return item && deckIndexForQuestionId(item.questionId) > -1;
-    }).slice(-15);
+    });
 
     recentQuestionTrail = items;
 
@@ -12029,7 +12037,7 @@ document.addEventListener("DOMContentLoaded", function() {
     recentQuestionTrail = (progress.recentQuestionTrail || []).filter(function(item) {
       var question = byQuestionId(item.questionId);
       return questionInActiveUnit(question);
-    }).slice(-15);
+    });
     recentTrailHintVisible = false;
     recentTrailHintQuestionId = null;
     recentTrailHintDismissed = !!progress.recentTrailHintDismissed;
