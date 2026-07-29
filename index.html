@@ -11380,6 +11380,7 @@ document.addEventListener("DOMContentLoaded", function() {
   var recentTrailHintVisible = false;
   var recentTrailHintDismissed = false;
   var recentTrailHintQuestionId = null;
+  var studyGuideNoticeSeen = false;
   var teachingStats = {};
   var teachingCardsShown = {};
   var questionTimerElapsed = 0;
@@ -11929,6 +11930,7 @@ document.addEventListener("DOMContentLoaded", function() {
         questionResponses: questionResponses,
         recentQuestionTrail: recentQuestionTrail,
         recentTrailHintDismissed: recentTrailHintDismissed,
+        studyGuideNoticeSeen: studyGuideNoticeSeen,
         timerElapsedSeconds: current ? currentTimerSeconds() : 0,
         timerQuestionId: current ? current.id : null,
         completedCurrentBank: completedCurrentBank,
@@ -12006,6 +12008,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     sessionCorrect = Number(saved.sessionCorrect || 0);
     sessionAttempted = Number(saved.sessionAttempted || 0);
+    studyGuideNoticeSeen = !!saved.studyGuideNoticeSeen;
     unitProgress = saved.unitProgress || {};
 
     if (!unitProgress[activeUnit] && (
@@ -13334,9 +13337,13 @@ document.addEventListener("DOMContentLoaded", function() {
   }
 
   function openFullStudyGuideWithNotice() {
-    window.alert(
-      "Due to priorities in other classes, this interactive study guide is not fully developed yet. Feel free to use it, but it is not as complete as originally envisioned. Some sections may be updated later; refreshing your browser will show the most up-to-date version."
-    );
+    if (!studyGuideNoticeSeen) {
+      studyGuideNoticeSeen = true;
+      saveState();
+      window.alert(
+        "Due to priorities in other classes, this interactive study guide is not fully developed yet. Feel free to use it, but it is not as complete as originally envisioned. Some sections may be updated later; refreshing your browser will show the most up-to-date version."
+      );
+    }
     openFullStudyGuide({ guideTargetId: "panel-integrated-metabolism-m4" });
   }
 
