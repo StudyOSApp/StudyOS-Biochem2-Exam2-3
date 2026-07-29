@@ -553,6 +553,19 @@
       vertical-align:bottom;
     }
 
+    .q-meta .learning-sequence-tag {
+      margin-left:6px;
+      border-color:#f0b45f;
+      background:#fff4d8;
+      color:#7a4b00;
+    }
+
+    body[data-theme="dark"] .q-meta .learning-sequence-tag {
+      border-color:#8b6429;
+      background:#2f2518;
+      color:#ffd999;
+    }
+
     .level-badge {
       border-radius:999px;
       border:1px solid var(--line);
@@ -11437,6 +11450,219 @@ document.addEventListener("DOMContentLoaded", function() {
     return exam3MajorTopicLabels[question.unit] || String(question.unit).replace(/^E3\s+/, "");
   }
 
+  function normalizedLearningText(question) {
+    if (!question) return "";
+    return [
+      question.question,
+      question.conceptBlock,
+      question.category,
+      question.a,
+      question.explanation
+    ].join(" ").toLowerCase();
+  }
+
+  function hasLearningCue(text, cues) {
+    return cues.some(function(cue) {
+      return text.indexOf(cue) !== -1;
+    });
+  }
+
+  function learningGroupInfo(question) {
+    var text = normalizedLearningText(question);
+    var unit = question && question.unit;
+    var block = String(question && question.conceptBlock || "").toLowerCase();
+
+    if (unit === "E3 Fat Vitamins") {
+      if (hasLearningCue(text, ["retinol", "retinal", "retinoic", "retinyl", "rhodopsin", "opsin", "transducin", "cgmp", "visual", "vision", "beta-carotene", "xerophthalmia", "night blindness"])) {
+        return { rank: 10, title: "Visual forms and signaling cluster" };
+      }
+      if (hasLearningCue(text, ["7-dehydrocholesterol", "skin photolysis", "calcitriol", "rickets", "osteomalacia", "calcium", "pth", "melanin", "prothrombin", "thrombin"])) {
+        return { rank: 20, title: "Activation and mineral-balance cluster" };
+      }
+      if (hasLearningCue(text, ["gamma-carboxyl", "clotting", "bleeding", "phylloquinone", "menaquinone", "bacterial", "antibiotic", "kh2"])) {
+        return { rank: 30, title: "Clotting-modification cluster" };
+      }
+      if (hasLearningCue(text, ["alpha-tocopherol", "lipid peroxidation", "antioxidant", "selenium", "gpx", "iron"])) {
+        return { rank: 40, title: "Membrane antioxidant cluster" };
+      }
+      if (hasLearningCue(text, ["bile", "micelle", "chylomicron", "absorption", "fat-soluble", "lipid handling", "isoprene", "dolichol"])) {
+        return { rank: 50, title: "Absorption and carrier cluster" };
+      }
+      return { rank: 90, title: "Mixed fat-soluble review" };
+    }
+
+    if (unit === "E3 Water Vitamins") {
+      if (hasLearningCue(text, ["thiamin", "thiamine", "tpp", "beriberi", "transketolase", "oxidative decarboxylation"])) {
+        return { rank: 10, title: "Carbon-transfer cofactor cluster" };
+      }
+      if (hasLearningCue(text, ["riboflavin", "fad", "fmn", "niacin", "nad", "nadp", "adp-ribosylation", "redox"])) {
+        return { rank: 20, title: "Redox carrier cluster" };
+      }
+      if (hasLearningCue(text, ["coa", "acp", "pantothenic", "biotin", "carboxylation", "avidin", "transfer cofactor"])) {
+        return { rank: 30, title: "Acyl and carboxyl transfer cluster" };
+      }
+      if (hasLearningCue(text, ["plp", "pyridox", "transamination", "decarboxylation", "ala synthase", "heme synthesis"])) {
+        return { rank: 40, title: "Amino-acid reaction cofactor cluster" };
+      }
+      if (hasLearningCue(text, ["folate", "tetrahydrofolate", "thf", "pteroylmonoglutamate", "methionine synthase", "homocysteine", "methylmalonyl", "cobalamin", "b12", "megaloblastic"])) {
+        return { rank: 50, title: "One-carbon and absorption cluster" };
+      }
+      if (hasLearningCue(text, ["vitamin c", "ascorb", "collagen", "proline", "lysine", "hydroxyl", "iron absorption", "scurvy"])) {
+        return { rank: 60, title: "Hydroxylation and antioxidant cluster" };
+      }
+      if (hasLearningCue(text, ["diet", "nutrition", "deficiency", "excess", "water-soluble"])) {
+        return { rank: 70, title: "Clinical nutrition cluster" };
+      }
+      return { rank: 90, title: "Mixed water-soluble review" };
+    }
+
+    if (unit === "E3 AA Products") {
+      if (hasLearningCue(text, ["creatine", "kidney", "guanidinoacetate"])) {
+        return { rank: 10, title: "Energy-buffer product cluster" };
+      }
+      if (hasLearningCue(text, ["arginine", "nitric oxide", "no synthase", "nonenzymatic", "cyclization"])) {
+        return { rank: 20, title: "Signal molecule product cluster" };
+      }
+      if (hasLearningCue(text, ["tyrosine", "dopamine", "norepinephrine", "epinephrine", "pnmt", "catecholamine", "melanin"])) {
+        return { rank: 30, title: "Aromatic product chain cluster" };
+      }
+      if (hasLearningCue(text, ["tryptophan", "serotonin", "melatonin"])) {
+        return { rank: 40, title: "Indole product chain cluster" };
+      }
+      if (hasLearningCue(text, ["glycine", "methyl", "one-carbon"])) {
+        return { rank: 50, title: "Small-donor product cluster" };
+      }
+      if (hasLearningCue(text, ["decarboxylation", "biogenic amine", "histamine", "gaba"])) {
+        return { rank: 60, title: "Biogenic amine reaction cluster" };
+      }
+      return { rank: 90, title: "Mixed amino-acid product review" };
+    }
+
+    if (unit === "E3 Nucleotide Logic") {
+      if (hasLearningCue(text, ["ribose 5-phosphate", "prpp", "atp activates ribose", "phosphoribosyl"])) {
+        return { rank: 10, title: "Ribose platform cluster" };
+      }
+      if (hasLearningCue(text, ["purine", "imp", "amp", "gmp"])) {
+        return { rank: 20, title: "Scaffold-building order cluster" };
+      }
+      if (hasLearningCue(text, ["pyrimidine", "carbamoyl phosphate", "aspartate", "cps-ii", "utp"])) {
+        return { rank: 30, title: "Ring-first assembly cluster" };
+      }
+      if (hasLearningCue(text, ["amino acids contribute", "precursors", "atoms"])) {
+        return { rank: 40, title: "Atom-donor comparison cluster" };
+      }
+      return { rank: 90, title: "Mixed nucleotide review" };
+    }
+
+    if (unit === "E3 Heme Pathway") {
+      if (hasLearningCue(text, ["ala synthase", "glycine", "succinyl-coa", "plp", "vitamin b6"])) {
+        return { rank: 10, title: "Entry and rate-control cluster" };
+      }
+      if (hasLearningCue(text, ["ferrochelatase", "iron insertion", "pyrrole"])) {
+        return { rank: 20, title: "Ring completion cluster" };
+      }
+      if (hasLearningCue(text, ["bilirubin", "degradation"])) {
+        return { rank: 30, title: "Breakdown product cluster" };
+      }
+      return { rank: 90, title: "Mixed heme review" };
+    }
+
+    if (unit === "E3 Integrated Metabolism") {
+      if (hasLearningCue(text, ["amino acid", "nitrogen", "muscle"])) {
+        return { rank: 10, title: "Amino-carbon routing cluster" };
+      }
+      if (hasLearningCue(text, ["fed", "storage", "triacylglycerol", "glycogen"])) {
+        return { rank: 20, title: "Fed-state storage cluster" };
+      }
+      if (hasLearningCue(text, ["fasting", "starvation", "ketone", "oaa", "oxaloacetate"])) {
+        return { rank: 30, title: "Fasting fuel-shift cluster" };
+      }
+      if (hasLearningCue(text, ["gluconeogenesis", "liver", "lactate", "red blood cells"])) {
+        return { rank: 40, title: "Liver glucose-support cluster" };
+      }
+      if (hasLearningCue(text, ["acetyl-coa", "common product", "fuel oxidation"])) {
+        return { rank: 50, title: "Central convergence cluster" };
+      }
+      if (hasLearningCue(text, ["allosteric", "feedback", "covalent", "transcriptional", "regulation"])) {
+        return { rank: 60, title: "Regulation mechanism cluster" };
+      }
+      if (hasLearningCue(text, ["anabolic", "catabolic"])) {
+        return { rank: 70, title: "Build-versus-breakdown cluster" };
+      }
+      if (block.indexOf("vitamins") !== -1) {
+        return { rank: 80, title: "Cofactor role cluster" };
+      }
+      return { rank: 90, title: "Mixed integrated review" };
+    }
+
+    return { rank: 999, title: "" };
+  }
+
+  function answerLearningKey(question) {
+    return String(question && question.a || "")
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, " ")
+      .trim();
+  }
+
+  function unitLearningRank(question) {
+    var order = {
+      "E3 Nucleotide Logic": 10,
+      "E3 Heme Pathway": 20,
+      "E3 AA Products": 30,
+      "E3 Integrated Metabolism": 40,
+      "E3 Water Vitamins": 50,
+      "E3 Fat Vitamins": 60
+    };
+    return order[question && question.unit] || 999;
+  }
+
+  function assignExam3LearningSequences() {
+    var answerCounts = {};
+
+    questions.forEach(function(question, index) {
+      question.sourceOrder = index;
+      if (!isExam3Question(question)) return;
+      var info = learningGroupInfo(question);
+      question.learningGroupTitle = info.title;
+      question.learningGroupRank = info.rank;
+      var key = question.unit + "::" + info.rank + "::" + answerLearningKey(question);
+      answerCounts[key] = (answerCounts[key] || 0) + 1;
+    });
+
+    questions.forEach(function(question) {
+      if (!isExam3Question(question)) return;
+      var key = question.unit + "::" + question.learningGroupRank + "::" + answerLearningKey(question);
+      var repeated = answerCounts[key] > 1;
+      question.learningPhase = repeated ? 1 : (question.learningGroupRank >= 90 ? 5 : 2);
+      if (question.learningGroupRank >= 90) question.learningPhase = 5;
+      question.learningStageTitle = question.learningPhase === 1
+        ? "Repeated-answer pattern"
+        : question.learningPhase === 5
+          ? "Mixed review"
+          : "Related concept build";
+    });
+  }
+
+  function shouldUseLearningSequence(pool) {
+    return !checkedOf(missedOnlyToggle, false) &&
+      !flaggedOnlyEnabled() &&
+      pool.some(function(question) { return isExam3Question(question); });
+  }
+
+  function orderLearningSequence(pool) {
+    return pool.slice().sort(function(a, b) {
+      var aAnswer = answerLearningKey(a);
+      var bAnswer = answerLearningKey(b);
+      return unitLearningRank(a) - unitLearningRank(b) ||
+        (a.learningPhase || 9) - (b.learningPhase || 9) ||
+        (a.learningGroupRank || 999) - (b.learningGroupRank || 999) ||
+        aAnswer.localeCompare(bAnswer) ||
+        String(a.conceptBlock || "").localeCompare(String(b.conceptBlock || "")) ||
+        (a.sourceOrder || 0) - (b.sourceOrder || 0);
+    });
+  }
+
   function questionInExam2Scope(question) {
     return isCollapsedExam2Question(question) && (activeExam2Scope === "all" || question.unit === activeExam2Scope);
   }
@@ -11970,7 +12196,9 @@ document.addEventListener("DOMContentLoaded", function() {
 
     var countValue = isAllWeeksUnit(activeUnit) ? "all" : valueOf(countFilter, "10");
     var count = countValue === "all" ? pool.length : parseInt(countValue, 10);
-    var ordered = shuffleQuestionsValue() === "on" ? shuffle(pool) : pool.slice();
+    var ordered = shouldUseLearningSequence(pool)
+      ? orderLearningSequence(pool)
+      : (shuffleQuestionsValue() === "on" ? shuffle(pool) : pool.slice());
 
     return ordered.slice(0, Math.min(count, ordered.length));
   }
@@ -12708,7 +12936,13 @@ document.addEventListener("DOMContentLoaded", function() {
   }
 
   function metaHtml(question, mode) {
-    return "<span class=\"tag\">" + htmlEscape(question.conceptBlock) + "</span>";
+    var html = "<span class=\"tag\">" + htmlEscape(question.conceptBlock) + "</span>";
+    if (isExam3Question(question) && question.learningGroupTitle) {
+      html += "<span class=\"tag learning-sequence-tag\">" +
+        htmlEscape(question.learningStageTitle + ": " + question.learningGroupTitle) +
+        "</span>";
+    }
+    return html;
   }
 
   function renderRecall(question) {
@@ -12922,7 +13156,9 @@ document.addEventListener("DOMContentLoaded", function() {
     if (currentMode === "mc") renderMultipleChoice(current);
     else renderRecall(current);
 
-    var deckName = shuffleQuestionsValue() === "on" ? "shuffled deck" : "ordered deck";
+    var deckName = shouldUseLearningSequence(deck)
+      ? "learning sequence"
+      : (shuffleQuestionsValue() === "on" ? "shuffled deck" : "ordered deck");
     setText("deckStatus", "Question " + (deckIndex + 1) + " of " + deck.length + " in this " + deckName);
     renderRecentQuestionTrail();
     updateFlagButton();
@@ -13241,6 +13477,8 @@ document.addEventListener("DOMContentLoaded", function() {
     setText("listQs", "Show Filtered List");
     saveState();
   }
+
+  assignExam3LearningSequences();
 
   if (isAllWeeksUnit(activeUnit) && countFilter) countFilter.value = "all";
   populateConceptFilter();
